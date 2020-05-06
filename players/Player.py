@@ -6,6 +6,7 @@ class Player:
         self.cards = []
         self.cardsOnTable = []
         self.cardsPlayed = []
+        self.steps = []
 
     def setCards(self, cards):
         self.cards = cards
@@ -14,8 +15,11 @@ class Player:
 
     def pickCard(self, playerIndex, environment):
         if len(self.cards) == 0:
-            print("Player {} attempt to pick a card from an empty hand".format(
-                playerIndex))
+            print(
+                "Player {} attempt to pick a card from an empty hand".format(
+                    playerIndex
+                )
+            )
             raise ValueError
         return self.cards[0]
 
@@ -35,8 +39,11 @@ class Player:
         done = False
         while not done:
             action = await self.selectCard(state, env)
-            nextState, _, done, env = yield action
+            nextState, reward, done, env = yield action
+            self.steps.append((state, action, reward, nextState, done))
             state = nextState
+
+        yield None
 
     async def selectCard(self, state, env):
         cardsInHand = state[-52:]

@@ -6,6 +6,6 @@ import cards.CardUtils as CardUtils
 import asyncio
 
 players = [FirstCardPlayer(), FirstCardPlayer(),
-           FirstCardPlayer(), ConsolePlayer()]
+           FirstCardPlayer(), FirstCardPlayer()]
 env = ArbamiyyeEnvironment(players, 13)
 asyncio.run(env.playGame())
