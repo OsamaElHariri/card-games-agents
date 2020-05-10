@@ -9,13 +9,20 @@ class PredictorPlayer(Player):
         self.predictor = predictor
 
     async def selectCard(self, state, env):
-        predictions = self.predictor.predict([state])
-        print("predictions")
+        validCards = env.getValidCards()
+        predictions = self.predictor.predict([state])[0]
+        predictions = self.removeInvalidActions(predictions, validCards)
         action = np.random.choice(len(predictions), p=predictions)
+        return action
 
-        print(action)
-        print(predictions)
-        for card in env.getValidCards():
-            suite, rank = CardUtils.indexToSuiteAndRank(card)
-            print("{} - {} of {}".format(card, rank, suite))
-        return int(input())
+    # set the probability of selecting an invalid action to 0
+    # and normailze the probabilty array so that its sum equals 1
+    def removeInvalidActions(self, predictions, validCards):
+        for actionIndex in range(len(predictions)):
+            if not actionIndex in validCards:
+                predictions[actionIndex] = 0
+        total = np.sum(predictions)
+        for predictionIndex in range(len(predictions)):
+            predictions[predictionIndex] = predictions[predictionIndex] / total
+
+        return predictions

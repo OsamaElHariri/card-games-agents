@@ -93,14 +93,14 @@ class CardGameEnvironment:
         state = []
         for i in range(self.playerCount):
             cards = self.players[i % self.playerCount].cardsPlayed
-            state.append(self.cardNumbersToOneHot(cards))
+            state += self.cardNumbersToOneHot(cards)
         return state
 
     def getCardsOnTableState(self, playerIndex):
         state = []
         for i in range(self.playerCount - 1):
             cards = self.players[(i + 1) % self.playerCount].cardsOnTable
-            state.append(self.cardNumbersToOneHot(cards))
+            state += self.cardNumbersToOneHot(cards)
         return state
 
     def getPlayerHandState(self, playerIndex):

@@ -22,7 +22,7 @@ class Step:
         if self.done or self.nextStep == None:
             return self.reward
         elif lookAheadCount > 0:
-            return self.reward + gamma * self.nextStep(
+            return self.reward + gamma * self.nextStep.getStateValue(
                 lookAheadCount - 1, gamma, stateValuePredictor
             )
         else:

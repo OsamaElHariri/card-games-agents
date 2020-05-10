@@ -2,25 +2,25 @@ import tensorflow as tf
 
 
 class ModelFactory:
-    def getActorModel(self, input_size, output_size):
+    def getActorModel(self, inputSize, outputSize):
         model = tf.keras.Sequential(
             [
-                tf.keras.layers.InputLayer(input_shape=(input_size,)),
-                tf.keras.Dense(120, activation="relu"),
-                tf.keras.Dense(250, activation="relu"),
-                tf.keras.Dense(output_size, activation="softmax"),
+                tf.keras.layers.InputLayer(input_shape=(inputSize,)),
+                tf.keras.layers.Dense(120, activation="relu"),
+                tf.keras.layers.Dense(250, activation="relu"),
+                tf.keras.layers.Dense(outputSize, activation="softmax"),
             ]
         )
 
         return model
 
-    def getCriticModel(self, input_size):
+    def getCriticModel(self, inputSize):
         model = tf.keras.Sequential(
             [
-                tf.keras.layers.InputLayer(input_shape=(input_size,)),
-                tf.keras.Dense(120, activation="relu"),
-                tf.keras.Dense(250, activation="relu"),
-                tf.keras.Dense(1, activation="tanh"),
+                tf.keras.layers.InputLayer(input_shape=(inputSize,)),
+                tf.keras.layers.Dense(120, activation="relu"),
+                tf.keras.layers.Dense(250, activation="relu"),
+                tf.keras.layers.Dense(1, activation="tanh"),
             ]
         )
 
