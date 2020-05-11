@@ -4,13 +4,14 @@ import numpy as np
 
 
 class PredictorPlayer(Player):
-    def __init__(self, predictor):
+    def __init__(self, actionPredictor, stateValuePredictor):
         super().__init__()
-        self.predictor = predictor
+        self.actionPredictor = actionPredictor
+        self.stateValuePredictor = stateValuePredictor
 
     async def selectCard(self, state, env):
         validCards = env.getValidCards()
-        predictions = self.predictor.predict([state])[0]
+        predictions = self.actionPredictor.predict([state])[0]
         predictions = self.removeInvalidActions(predictions, validCards)
         action = np.random.choice(len(predictions), p=predictions)
         return action

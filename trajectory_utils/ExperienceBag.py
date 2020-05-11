@@ -19,3 +19,21 @@ class ExperienceBag:
                 firstStep = nextStep
             step = nextStep
         self.experiences.append(firstStep)
+
+    def getAllSteps(self):
+        allSteps = []
+        for experience in self.experiences:
+            allSteps += experience.getAllSteps()
+        return allSteps
+
+    def getStates(self, steps):
+        return list(map(lambda x: x.state, steps))
+
+    def getPreviousActionProbabilities(self, steps):
+        return list(map(lambda x: x.previousActionProbabilities, steps))
+
+    def getAdvantages(self, steps, stateValuePredictor, gamma):
+        return list(map(lambda x: x.getAdvantageValue(1, gamma, stateValuePredictor), steps))
+
+    def getStateValues(self, steps, stateValuePredictor, gamma):
+        return list(map(lambda x: x.getStateValue(1, gamma, stateValuePredictor), steps))

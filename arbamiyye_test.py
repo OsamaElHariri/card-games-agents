@@ -5,13 +5,15 @@ from players.FirstCardPlayer import FirstCardPlayer
 from players.PredictorPlayer import PredictorPlayer
 from trajectory_utils.ModelFactory import ModelFactory
 from trajectory_utils.ExperienceBag import ExperienceBag
+from trajectory_utils.ModelTrainer import ModelTrainer
 import cards.CardUtils as CardUtils
 import asyncio
 
 
 model = ModelFactory().getActorModel(4 + 52 * 4 + 52 * 3 + 52, 52)
-players = [PredictorPlayer(model), PredictorPlayer(model),
-           PredictorPlayer(model), PredictorPlayer(model)]
+stateModel = ModelFactory().getCriticModel(4 + 52 * 4 + 52 * 3 + 52)
+players = [PredictorPlayer(model, stateModel), PredictorPlayer(model, stateModel),
+           PredictorPlayer(model, stateModel), PredictorPlayer(model, stateModel)]
 # players = [ConsolePlayer(), FirstCardPlayer(),
 #            FirstCardPlayer(), FirstCardPlayer()]
 env = ArbamiyyeEnvironment(players, 13)
@@ -26,3 +28,7 @@ step = experiences.experiences[0]
 while step != None:
     print("Action {} reward {}".format(step.action, step.reward))
     step = step.nextStep
+
+trainer = ModelTrainer(model, stateModel, experiences)
+
+trainer.trainActorCritic()
