@@ -23,7 +23,7 @@ class Step:
     def getAdvantageValue(self, lookAheadCount, gamma, stateValuePredictor):
         return self.getStateValue(
             lookAheadCount, gamma, stateValuePredictor
-        ) - stateValuePredictor(self.arrayToTFMatrix([self.state]))
+        ) - self.queryPredictor(stateValuePredictor)
 
     # recursively get the state value V(S_t) using TD Lambda, where lambda is the variable called lookAheadCount
     # the state value is the reward if this is the terminal state (the state the episode ends on)
@@ -36,7 +36,10 @@ class Step:
                 lookAheadCount - 1, gamma, stateValuePredictor
             )
         else:
-            return stateValuePredictor(self.arrayToTFMatrix([self.state]))
-    
+            return self.queryPredictor(stateValuePredictor)
+
+    def queryPredictor(self, stateValuePredictor):
+        return stateValuePredictor(self.arrayToTFMatrix([self.state]))[0][0].numpy()
+
     def arrayToTFMatrix(self, array):
         return tf.reshape(array, [len(array), len(array[0])])

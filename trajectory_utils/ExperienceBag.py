@@ -33,7 +33,7 @@ class ExperienceBag:
         return list(map(lambda x: x.previousActionProbabilities, steps))
 
     def getAdvantages(self, steps, stateValuePredictor, gamma):
-        return list(map(lambda x: x.getAdvantageValue(1, gamma, stateValuePredictor), steps))
+        return list(map(lambda x: [x.getAdvantageValue(1, gamma, stateValuePredictor)], steps))
 
     def getStateValues(self, steps, stateValuePredictor, gamma):
-        return list(map(lambda x: x.getStateValue(1, gamma, stateValuePredictor), steps))
+        return list(map(lambda x: [x.getStateValue(1, gamma, stateValuePredictor)], steps))
