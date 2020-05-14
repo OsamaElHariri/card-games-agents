@@ -31,4 +31,4 @@ while step != None:
 
 trainer = ModelTrainer(model, stateModel, experiences)
 
-trainer.trainActorCritic()
+trainer.trainActorCritic(32, 16)

@@ -89,5 +89,5 @@ for runIndex in range(100):
     experienceBag.addEpisode(episode)
     trainer = ModelTrainer(actorModel, criticModel, experienceBag)
     # print("Training")
-    trainer.trainActorCritic()
+    trainer.trainActorCritic(2, 6)
     # print("Trained")

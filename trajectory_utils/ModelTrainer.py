@@ -11,7 +11,7 @@ class ModelTrainer:
         self.actorLearningRate = 0.01
         self.gamma = 0.99
 
-    def trainActorCritic(self):
+    def trainActorCritic(self, minibatchSize, minibatchTrainCount):
         allSteps = self.experienceBag.getAllSteps()
         allStates = self.arrayToTFMatrix(
             self.experienceBag.getStates(allSteps))
@@ -22,12 +22,12 @@ class ModelTrainer:
             allSteps[i].previousActionProbabilities = currentActionProbabilities[i]
             allSteps[i].previousStateValues = currentStateValues[i]
 
-        # minibatch = self.getMinibatch(allSteps, 2)
-        minibatch = self.getMinibatch(allSteps, len(allSteps))
-        self.trainOnMinibatch(minibatch)
+        for i in range(minibatchTrainCount):
+            minibatch = self.getMinibatch(allSteps, minibatchSize)
+            self.trainOnMinibatch(minibatch)
 
     def getMinibatch(self, allSteps, size):
-        # random.shuffle(allSteps)
+        random.shuffle(allSteps)
         return allSteps[0:size]
 
     def trainOnMinibatch(self, minibatch):
@@ -48,10 +48,12 @@ class ModelTrainer:
             predictions = self.actorModel(states)
             ratio = tf.math.exp(tf.math.log(predictions) -
                                 tf.math.log(previousActionProbabilities))
-            advantageRatio = tf.math.multiply(tf.cast(ratio, tf.float64), tf.cast(advantages, tf.float64))
+            advantageRatio = tf.math.multiply(
+                tf.cast(ratio, tf.float64), tf.cast(advantages, tf.float64))
 
             ratioClipped = tf.keras.backend.clip(ratio, 0.8, 1.2)
-            clippedAdvantageRatio = tf.math.multiply(tf.cast(ratioClipped, tf.float64), tf.cast(advantages, tf.float64))
+            clippedAdvantageRatio = tf.math.multiply(
+                tf.cast(ratioClipped, tf.float64), tf.cast(advantages, tf.float64))
 
             gain = tf.math.minimum(advantageRatio, clippedAdvantageRatio)
             # loss = tf.math.multiply(gain, -1)
@@ -71,7 +73,8 @@ class ModelTrainer:
 
         with tf.GradientTape() as tape:
             predictions = self.criticModel(states)
-            loss = tf.keras.losses.mse(tf.cast(stateValues, tf.float64), tf.cast(predictions, tf.float64))
+            loss = tf.keras.losses.mse(
+                tf.cast(stateValues, tf.float64), tf.cast(predictions, tf.float64))
         grads = tape.gradient(loss, self.criticModel.trainable_variables)
         optimizer.apply_gradients(
             zip(grads, self.criticModel.trainable_variables))
