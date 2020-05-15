@@ -11,10 +11,10 @@ class ArbamiyyeEnvironment(CardGameEnvironment):
         self.playerTricks = [[]] * self.playerCount
         self.roundSummaries = []
 
-    async def playGame(self):
+    def playGame(self):
         print("Playing Arbamiyye")
         for _ in range(13):
-            await self.playRound()
+            self.playRound()
 
         winningPlayer, highestTrickCount = self.getGameWinner()
         print(
@@ -26,8 +26,9 @@ class ArbamiyyeEnvironment(CardGameEnvironment):
 
         for i in range(self.playerCount):
             playerIndex = (i + self.playerInControl) % self.playerCount
-            await self.playerGenerators[playerIndex].asend(
-                (self.getState(playerIndex), self.getTricksWon(playerIndex), True, self)
+            self.playerGenerators[playerIndex].send(
+                (self.getState(playerIndex),
+                 self.getTricksWon(playerIndex), True, self)
             )
 
     def getValidCards(self):
@@ -44,7 +45,8 @@ class ArbamiyyeEnvironment(CardGameEnvironment):
         firstCardPlayed = self.players[self.playerInControl].cardsOnTable[0]
         suite, _ = CardUtils.indexToSuiteAndRank(card)
         roundSuite, _ = CardUtils.indexToSuiteAndRank(firstCardPlayed)
-        isHoldingSuite = self.playerIsHoldingSuite(self.currentPlayer, roundSuite)
+        isHoldingSuite = self.playerIsHoldingSuite(
+            self.currentPlayer, roundSuite)
 
         if isHoldingSuite and suite != roundSuite:
             return False
@@ -67,7 +69,8 @@ class ArbamiyyeEnvironment(CardGameEnvironment):
         print("Round Winner = {}".format(roundWinner))
         super().onRoundEnd()
 
-        summary = RoundSummary(self, cardsPlayed, roundWinner, self.roundCount == 12)
+        summary = RoundSummary(
+            self, cardsPlayed, roundWinner, self.roundCount == 12)
         self.roundSummaries.append(summary)
 
         for i in range(self.playerCount):
@@ -103,7 +106,8 @@ class ArbamiyyeEnvironment(CardGameEnvironment):
 
         for i in range(self.playerCount - 1):
             playerIndex = (i + self.playerInControl + 1) % self.playerCount
-            betterCard = self.getBetterCard(roundSuite, bestCard, cards[playerIndex])
+            betterCard = self.getBetterCard(
+                roundSuite, bestCard, cards[playerIndex])
 
             if betterCard != bestCard:
                 bestCardIndex = playerIndex

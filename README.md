@@ -3,7 +3,7 @@ Reinforcement Learning Agents for Card Games
 Python Version: 3.7.3
 
 The `environments` folder holds the environments the agents can interact with.
-The agents are Player objects that override the method `async def selectCard(self, state, env)`
+The agents are Player objects that override the method `def selectCard(self, state, env)`
 
 `CardGameEnvironment` is a generic class that is meant to be sub-classed
 

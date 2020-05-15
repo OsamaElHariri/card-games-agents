@@ -7,7 +7,7 @@ class FirstCardPlayer(Player):
     def __init__(self):
         super().__init__()
 
-    async def selectCard(self, state, env):
+    def selectCard(self, state, env):
         validCards = sorted(env.getValidCards(), key=self.heartsLastSort)
         return validCards[len(validCards) - 1]
 

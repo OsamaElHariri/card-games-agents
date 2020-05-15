@@ -9,7 +9,7 @@ class PredictorPlayer(Player):
         self.actionPredictor = actionPredictor
         self.stateValuePredictor = stateValuePredictor
 
-    async def selectCard(self, state, env):
+    def selectCard(self, state, env):
         validCards = env.getValidCards()
         predictions = self.actionPredictor.predict([state])[0]
         predictions = self.removeInvalidActions(predictions, validCards)

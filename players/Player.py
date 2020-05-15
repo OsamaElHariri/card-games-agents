@@ -35,17 +35,17 @@ class Player:
         self.cardsPlayed += self.cardsOnTable
         self.cardsOnTable = []
 
-    async def takeAction(self, state, env):
+    def takeAction(self, state, env):
         done = False
         while not done:
-            action = await self.selectCard(state, env)
+            action = self.selectCard(state, env)
             nextState, reward, done, env = yield action
             self.steps.append((state, action, reward, nextState, done))
             state = nextState
 
         yield None
 
-    async def selectCard(self, state, env):
+    def selectCard(self, state, env):
         cardsInHand = state[-52:]
         cardsInHand = self.oneHotToCardNumbers(cardsInHand)
         return cardsInHand[0]

@@ -18,7 +18,7 @@ class CardGameEnvironment:
     def getPlayerInControl(self):
         return 0
 
-    async def playRound(self):
+    def playRound(self):
         self.roundCount += 1
         self.printPlayerCards()
         for i in range(self.playerCount):
@@ -30,9 +30,9 @@ class CardGameEnvironment:
             if self.roundCount == 0:
                 gen = player.takeAction(self.getState(playerIndex), self)
                 self.playerGenerators[playerIndex] = gen
-                card = await gen.asend(None)
+                card = gen.send(None)
             else:
-                card = await self.playerGenerators[playerIndex].asend(
+                card = self.playerGenerators[playerIndex].send(
                     (self.getState(playerIndex), 0, False, self)
                 )
 
