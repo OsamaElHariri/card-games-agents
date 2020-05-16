@@ -20,7 +20,7 @@ class CardGameEnvironment:
 
     def playRound(self):
         self.roundCount += 1
-        self.printPlayerCards()
+        # self.printPlayerCards()
         for i in range(self.playerCount):
             playerIndex = (i + self.playerInControl) % self.playerCount
             self.currentPlayer = playerIndex
@@ -40,7 +40,7 @@ class CardGameEnvironment:
                 print("Player {} played an invalid card {}".format(playerIndex, card))
                 raise ValueError
             suite, rank = CardUtil.indexToSuiteAndRank(card)
-            print("Player {} played card {} of {}".format(playerIndex, rank, suite))
+            # print("Player {} played card {} of {}".format(playerIndex, rank, suite))
             player.play(card)
         self.onRoundEnd()
 

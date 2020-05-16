@@ -7,8 +7,8 @@ class ModelTrainer:
         self.actorModel = actorModel
         self.criticModel = criticModel
         self.experienceBag = experienceBag
-        self.criticLearningRate = 0.01
-        self.actorLearningRate = 0.01
+        self.criticLearningRate = 0.001
+        self.actorLearningRate = 0.001
         self.gamma = 0.99
 
     def trainActorCritic(self, minibatchSize, minibatchTrainCount):
@@ -48,8 +48,8 @@ class ModelTrainer:
 
         with tf.GradientTape() as tape:
             predictions = self.actorModel(states)
-            ratio = tf.math.exp(tf.math.log(predictions) -
-                                tf.math.log(previousActionProbabilities))
+            ratio = tf.math.exp(tf.math.log(predictions + 1e-10) -
+                                tf.math.log(previousActionProbabilities + 1e-10))
 
             ratio = tf.cast(ratio, tf.float64)
             advantages = tf.cast(advantages, tf.float64)
@@ -61,9 +61,10 @@ class ModelTrainer:
 
             clippedAdvantageRatio = ratioClipped * advantages
 
-            gain = tf.math.minimum(advantageRatio, clippedAdvantageRatio)
-            # loss = tf.math.multiply(gain, -1)
-            loss = tf.math.multiply(gain, 1)
+            gain = tf.keras.backend.mean(tf.math.minimum(
+                advantageRatio, clippedAdvantageRatio))
+            # loss = gain * -1
+            loss = gain * 1
 
         grads = tape.gradient(loss, self.actorModel.trainable_variables)
         optimizer.apply_gradients(

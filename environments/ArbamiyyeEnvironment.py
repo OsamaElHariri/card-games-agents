@@ -30,6 +30,7 @@ class ArbamiyyeEnvironment(CardGameEnvironment):
                 (self.getState(playerIndex),
                  self.getTricksWon(playerIndex), True, self)
             )
+        return winningPlayer, highestTrickCount
 
     def getValidCards(self):
         cards = []
@@ -66,7 +67,7 @@ class ArbamiyyeEnvironment(CardGameEnvironment):
             cardsPlayed.append(player.cardsOnTable[0])
 
         roundWinner = self.getStrongestCardIndex(cardsPlayed)
-        print("Round Winner = {}".format(roundWinner))
+        # print("Round Winner = {}".format(roundWinner))
         super().onRoundEnd()
 
         summary = RoundSummary(

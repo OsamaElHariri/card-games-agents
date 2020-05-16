@@ -40,7 +40,7 @@ class Player:
         while not done:
             action = self.selectCard(state, env)
             nextState, reward, done, env = yield action
-            self.steps.append((state, action, reward, nextState, done))
+            self.steps.append((state, action, reward / 13, nextState, done))
             state = nextState
 
         yield None

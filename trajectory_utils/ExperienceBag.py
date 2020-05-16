@@ -20,6 +20,9 @@ class ExperienceBag:
             step = nextStep
         self.experiences.append(firstStep)
 
+    def stepCount(self):
+        return len(self.getAllSteps())
+
     def getAllSteps(self):
         allSteps = []
         for experience in self.experiences:
